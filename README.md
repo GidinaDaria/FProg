@@ -1,0 +1,2 @@
+# FProg
+Фускинг haskell
