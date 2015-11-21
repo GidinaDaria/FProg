@@ -4,6 +4,8 @@ where
 import qualified Data.Vector as V
 import System.Random
     
+data Metric = Hamming | Euclide deriving(Eq, Read)
+data InitialMatrix = RandomMatrix | RandomCenter deriving(Eq, Read)
 
 generateNormMatrix :: Int -> Int -> StdGen -> V.Vector(V.Vector Double)
 generateNormMatrix objectsCount clustersCount seed = 
@@ -16,8 +18,8 @@ generateRandomList size seed = V.take size (V.unfoldr (Just . random) seed)
 getHammingDistance :: V.Vector Double -> V.Vector Double -> Double
 getHammingDistance a b = V.sum $ V.map abs (V.zipWith (-) a b)
 
-getEuclideanDistance :: V.Vector Double -> V.Vector Double -> Double
-getEuclideanDistance a b = sqrt $ V.sum $ V.map (** 2) (V.zipWith (-) a b)
+getEuclideDistance :: V.Vector Double -> V.Vector Double -> Double
+getEuclideDistance a b = sqrt $ V.sum $ V.map (** 2) (V.zipWith (-) a b)
 
 normalizeMatrixRow :: V.Vector Double -> V.Vector Double
 normalizeMatrixRow a = V.map (/sumrow) a

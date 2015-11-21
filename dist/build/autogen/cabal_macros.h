@@ -14,6 +14,13 @@
   (major1) == 0 && (major2) <  3 || \
   (major1) == 0 && (major2) == 3 && (minor) <= 4)
 
+/* package optparse-applicative-0.12.0.0 */
+#define VERSION_optparse_applicative "0.12.0.0"
+#define MIN_VERSION_optparse_applicative(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  12 || \
+  (major1) == 0 && (major2) == 12 && (minor) <= 0)
+
 /* package random-1.1 */
 #define VERSION_random "1.1"
 #define MIN_VERSION_random(major1,major2,minor) (\
@@ -98,5 +105,5 @@
   (major1) == 2 && (major2) <  22 || \
   (major1) == 2 && (major2) == 22 && (minor) <= 0)
 
-#define CURRENT_PACKAGE_KEY "Lab1_BdLaCAjEARV4ldb5p9IjLQ"
+#define CURRENT_PACKAGE_KEY "Lab1_Lo5T6zyvPtH2EmKKHuyFQQ"
 
