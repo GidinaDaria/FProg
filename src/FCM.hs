@@ -3,9 +3,6 @@ where
 
 import qualified Data.Vector as V
 import System.Random
-    
-data Metric = Hamming | Euclide deriving(Eq, Read)
-data InitialMatrix = RandomMatrix | RandomCenter deriving(Eq, Read)
 
 generateNormMatrix :: Int -> Int -> StdGen -> V.Vector(V.Vector Double)
 generateNormMatrix objectsCount clustersCount seed = 

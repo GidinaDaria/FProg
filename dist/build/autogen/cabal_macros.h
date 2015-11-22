@@ -7,6 +7,20 @@
   (major1) == 4 && (major2) <  8 || \
   (major1) == 4 && (major2) == 8 && (minor) <= 1)
 
+/* package bytestring-0.10.6.0 */
+#define VERSION_bytestring "0.10.6.0"
+#define MIN_VERSION_bytestring(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  10 || \
+  (major1) == 0 && (major2) == 10 && (minor) <= 6)
+
+/* package cassava-0.4.4.0 */
+#define VERSION_cassava "0.4.4.0"
+#define MIN_VERSION_cassava(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  4 || \
+  (major1) == 0 && (major2) == 4 && (minor) <= 4)
+
 /* package matrix-0.3.4.4 */
 #define VERSION_matrix "0.3.4.4"
 #define MIN_VERSION_matrix(major1,major2,minor) (\
@@ -105,5 +119,5 @@
   (major1) == 2 && (major2) <  22 || \
   (major1) == 2 && (major2) == 22 && (minor) <= 0)
 
-#define CURRENT_PACKAGE_KEY "Lab1_Lo5T6zyvPtH2EmKKHuyFQQ"
+#define CURRENT_PACKAGE_KEY "Lab1_0OWEkaQbtLXCk1GftxJYsl"
 
