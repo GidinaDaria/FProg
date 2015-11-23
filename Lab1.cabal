@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable Lab1
   main-is:             Main.hs
-  other-modules:       FCM
+  other-modules:       FCM,CsvParser,Types,CmdArgumentsParser
   -- other-extensions:    
   build-depends:       base >=4.8 && <4.9,vector,random,matrix,optparse-applicative, cassava, bytestring
   hs-source-dirs:      src
