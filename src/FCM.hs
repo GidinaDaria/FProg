@@ -6,17 +6,16 @@ import System.Random
 import Data.List as L
 
 
---findCenters :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) 
---findCenters initialMatrix matrix = 
---    let 
---        addTwoVectors a b = V.zipWith (+) a b 
---        vectorSum  v = sum v
---        applyExponentialWeight = V.map (**2)
---        vectorsSum v = foldr1 (zipWith (+)) v 
---        sumValue col = vectorsSum (V.zipWith (applyExponentialWeight) col matrix)
---        
---    in V.map (/vectorSum) sumValue
-
+findCenters :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) 
+findCenters initialMatrix matrix = V.map calculateCenter transposedInitialMatrix
+    where  
+        transposedInitialMatrix = transposeMatrix initialMatrix
+        applyExponentialWeight = V.map (**2)
+        calculateCenter col = let 
+            vectorSum = V.sum col
+            vectors = V.zipWith zipper col matrix 
+            partCalcValue = V.foldr1 (V.zipWith (+)) vectors
+         in V.map (/vectorSum) partCalcValue   
 
 
 generateNormMatrix :: Int -> Int -> StdGen -> V.Vector(V.Vector Double)
