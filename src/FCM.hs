@@ -6,17 +6,17 @@ import System.Random
 import Data.List as L
 
 
-findCenters :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> [[Double]]
-findCenters initialMatrix matrix = 
-    let objectsCount = V.length matrix
-        zipper mu = V.map (*mu)
-        --clustersCount = V.length V.head initialMatrix
-        --vectorSum a b = V.zipWith (+) a b 
-        func col = V.map (/colSum) vectorsSum
-                where   colSum = sum col
-                        vectors = zipWith zipper col matrix 
-                        vectorsSum = foldr1 (V.zipWith (+)) vectors
-    in  transposeMatrix matrix
+--findCenters :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) 
+--findCenters initialMatrix matrix = 
+--    let 
+--        addTwoVectors a b = V.zipWith (+) a b 
+--        vectorSum  v = sum v
+--        applyExponentialWeight = V.map (**2)
+--        vectorsSum v = foldr1 (zipWith (+)) v 
+--        sumValue col = vectorsSum (V.zipWith (applyExponentialWeight) col matrix)
+--        
+--    in V.map (/vectorSum) sumValue
+
 
 
 generateNormMatrix :: Int -> Int -> StdGen -> V.Vector(V.Vector Double)
@@ -44,11 +44,11 @@ normalizeMatrixRow :: V.Vector Double -> V.Vector Double
 normalizeMatrixRow a = V.map (/sumrow) a
     where sumrow = V.sum a
 
-transposeMatrix :: V.Vector (V.Vector Double) -> [[Double]]
-transposeMatrix matrix = transpose $ toListMatrix matrix
+transposeMatrix :: V.Vector (V.Vector Double) -> V.Vector (V.Vector Double)
+transposeMatrix matrix = toVectorMatrix $ transpose $ toListMatrix matrix
 
 toListMatrix :: V.Vector (V.Vector Double) -> [[Double]]
 toListMatrix matrix =  map V.toList (V.toList matrix)
 
---toVectorMatrix :: [[Double]] -> V.Vector (V.Vector Double) 
---toVectorMatrix matrix =  map V.fromList (V.fromList  matrix)
+toVectorMatrix :: [[Double]] -> V.Vector (V.Vector Double) 
+toVectorMatrix matrix = V.map (V.fromList) (V.fromList  matrix)
