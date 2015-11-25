@@ -13,7 +13,7 @@ main = do
     seed <- newStdGen 
     let cmdArguments = info (helper <*> parseCmdArguments) fullDesc
     parsedCmdArguments <- execParser cmdArguments
-    print $ parsedCmdArguments
+    --print $ parsedCmdArguments
 
     --read file content
     inputFileContent <- readFile $ inputFile parsedCmdArguments
@@ -21,7 +21,7 @@ main = do
     case csvResult of Left errorMessage -> error errorMessage
                       Right matrix -> do
                         print $ matrix
-                        print $ transposeMatrix matrix
+                        --print $ findCenters matrix
                         --print $ getRandomCenters matrix 5 seed
 
 

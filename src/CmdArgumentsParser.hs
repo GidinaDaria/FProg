@@ -16,4 +16,4 @@ parseCmdArguments = CmdArguments
     <*> option auto (long "precision" <> short 'p' <> metavar "DOUBLE" <> help "Precision (default 0.005 )" <> value 0.005)
     <*> option auto (long "clusterCount" <> short 'c' <> metavar "INT" <> help "Clasters count (default 5)" <> value 5)
     <*> option auto (long "metric" <> short 'm' <> metavar "NAME" <> help "Distance metric Hamming, Euclide (default Euclide)" <> value Types.Euclide)
-    <*> option auto (long "initialMatrix" <> short 'i' <> metavar "NAME" <> help "InitialMatrix RandomMatrix,RandomCenter(default RandomMatrix)" <> value Types.RandomMatrix)   
+    <*> option auto (long "initialMatrix" <> short 'i' <> metavar "NAME" <> help "Supply Matrix: RandomMatrix,RandomCenter(default RandomMatrix)" <> value Types.RandomMatrix)   

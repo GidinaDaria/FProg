@@ -1,5 +1,7 @@
 module Types
 where
+       
+import qualified Data.Vector as V
 
 data Metric = Hamming | Euclide deriving(Eq, Show, Read)
 data InitialMatrix = RandomMatrix | RandomCenter deriving(Eq, Show, Read)
@@ -16,3 +18,6 @@ data CmdArguments =  CmdArguments {
                                    metric :: Types.Metric,
                                    initialMatrix :: Types.InitialMatrix
                                    } deriving(Show, Read)
+
+
+type  MetricFuntion =  V.Vector Double -> V.Vector Double -> Double
