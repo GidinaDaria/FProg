@@ -42,6 +42,13 @@
   (major1) == 1 && (major2) <  1 || \
   (major1) == 1 && (major2) == 1 && (minor) <= 0)
 
+/* package split-0.2.2 */
+#define VERSION_split "0.2.2"
+#define MIN_VERSION_split(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  2 || \
+  (major1) == 0 && (major2) == 2 && (minor) <= 2)
+
 /* package vector-0.11.0.0 */
 #define VERSION_vector "0.11.0.0"
 #define MIN_VERSION_vector(major1,major2,minor) (\
@@ -119,5 +126,5 @@
   (major1) == 2 && (major2) <  22 || \
   (major1) == 2 && (major2) == 22 && (minor) <= 0)
 
-#define CURRENT_PACKAGE_KEY "Lab1_0OWEkaQbtLXCk1GftxJYsl"
+#define CURRENT_PACKAGE_KEY "Lab1_9iWvwiFFumcDQ0qDc2R1Gn"
 

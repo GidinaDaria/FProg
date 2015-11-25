@@ -5,7 +5,33 @@ import qualified Data.Vector as V
 import System.Random
 import Data.List as L
 import Types as T
+import Data.List.Split as S
 
+runFCM :: FcmArguments -> V.Vector (V.Vector Double) -> StdGen -> V.Vector (V.Vector Double)
+runFCM arguments matrix seed = 
+    let 
+        delimiter = delimiterFcm arguments
+        precision = precisionFcm arguments
+        metric = metricFcm arguments
+        initialMatrix = initialMatrixFcm arguments
+        objectCount = V.length matrix
+        clustersCount = clusterCountFcm arguments
+        metricFunction = getMetricFuntion metric
+        supplyMatrix = if initialMatrix == RandomCenter
+                        then
+                            let centers = getRandomCenters matrix clustersCount seed
+                                metricF = getMetricFuntion metric
+                            in generateNewSupplyMatrix matrix centers metricF
+                        else generateInitialSupplyMatrix objectCount clustersCount seed
+    in clusterize metricFunction precision matrix supplyMatrix
+
+clusterize:: T.MetricFuntion -> Double -> V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> V.Vector(V.Vector Double)
+clusterize metricFunction precision matrix supplyMatrix = 
+    let newSupplyMatrix = generateNewSupplyMatrix matrix centers metricFunction 
+        centers = findCenters supplyMatrix matrix
+    in if checkMatrix newSupplyMatrix supplyMatrix <= precision
+       then newSupplyMatrix
+       else clusterize metricFunction precision matrix newSupplyMatrix
 
 
 findCenters :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) 
@@ -14,14 +40,17 @@ findCenters supplyMatrix matrix = V.map calculateCenter transposedInitialMatrix
         transposedInitialMatrix = transposeMatrix supplyMatrix   
         calculateCenter col = let 
                 vectorSum = V.sum col 
-                --applyExponentialWeight mu = V.map (**2)  -- m = 2
                 vectors = V.zipWith (\a b -> V.map(\belem -> belem + (a**2)) b) col matrix 
                 partCalcValue = V.foldr1 (V.zipWith (+)) vectors 
             in V.map (/vectorSum) partCalcValue
 
+generateNewSupplyMatrix :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> T.MetricFuntion -> V.Vector(V.Vector Double)
+generateNewSupplyMatrix matrix centers metric = 
+    let
+        objectsFunctionMap xi vk = generateNewSupplyElement xi vk centers metric
+    in
+        V.map (\xi -> V.map (\vk -> objectsFunctionMap xi vk) centers) matrix
 
-
---
 generateNewSupplyElement :: V.Vector Double -> V.Vector Double -> V.Vector(V.Vector Double) -> T.MetricFuntion -> Double
 generateNewSupplyElement xi vk centers metricFunction =
     let 
@@ -32,24 +61,17 @@ generateNewSupplyElement xi vk centers metricFunction =
         sumResult = V.foldr (\elem prevSum -> prevSum + (valForSum elem)) 0.0 centers
     in sumResult ** (-1)
 
-
-generateNewSupplyMatrix :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> T.MetricFuntion -> V.Vector(V.Vector Double)
-generateNewSupplyMatrix matrix centers metric = 
-    let
-        objectsFunctionMap xi vk = generateNewSupplyElement xi vk centers metric
-    in
-        V.map (\xi -> V.map (\vk -> objectsFunctionMap xi vk) centers) matrix
-
-
 checkMatrix :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> Double
 checkMatrix supplyMatrix newSupplyMatrix = V.maximum  $ V.zipWith (\a b -> V.maximum $ V.zipWith (\l v -> abs $ l - v) a b) supplyMatrix newSupplyMatrix
+
 --SupplyMatrix
 
-generateSupplyMatrix :: Int -> Int -> StdGen -> V.Vector(V.Vector Double)
-generateSupplyMatrix objectsCount clustersCount seed = 
+generateInitialSupplyMatrix :: Int -> Int -> StdGen -> V.Vector(V.Vector Double)
+generateInitialSupplyMatrix objectsCount clustersCount seed = 
     let rows  = V.replicate objectsCount
-    --todo: generate new seed
-    in V.replicate objectsCount (normalizeMatrixRow $ generateRandomList clustersCount seed)
+        randomList = generateRandomList (clustersCount * objectsCount) seed
+        getMatrix = toVectorMatrix $ S.chunksOf clustersCount (V.toList randomList)
+    in V.map (normalizeMatrixRow) (getMatrix)
 
 getRandomCenters :: V.Vector(V.Vector Double) -> Int -> StdGen -> V.Vector(V.Vector Double)
 getRandomCenters matrix clustersCount seed = 
@@ -73,11 +95,10 @@ normalizeMatrixRow :: V.Vector Double -> V.Vector Double
 normalizeMatrixRow a = V.map (/sumrow) a
     where sumrow = V.sum a
 
-getMetricFuntion:: T.CmdArguments -> T.MetricFuntion
-getMetricFuntion cmdArguments = if (m) == T.Hamming
-                                                  then getHammingDistance
-                                                  else getEuclideDistance
-                                where m = (metric cmdArguments)
+getMetricFuntion:: T.Metric -> T.MetricFuntion
+getMetricFuntion m = if m == T.Hamming
+                                  then getHammingDistance
+                                  else getEuclideDistance
 
 --Matrix Transformations
 transposeMatrix :: V.Vector (V.Vector Double) -> V.Vector (V.Vector Double)

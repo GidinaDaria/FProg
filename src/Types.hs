@@ -19,5 +19,21 @@ data CmdArguments =  CmdArguments {
                                    initialMatrix :: Types.InitialMatrix
                                    } deriving(Show, Read)
 
+data FcmArguments =  FcmArguments { delimiterFcm :: Char,
+                                   precisionFcm :: Double,
+                                   clusterCountFcm :: Int,
+                                   metricFcm :: Types.Metric,
+                                   initialMatrixFcm :: Types.InitialMatrix
+                                   } deriving(Show, Read)
+
 
 type  MetricFuntion =  V.Vector Double -> V.Vector Double -> Double
+
+convertToFcmArguments:: CmdArguments -> FcmArguments
+convertToFcmArguments cmdArguments = FcmArguments {
+       delimiterFcm = delimiter cmdArguments,
+       precisionFcm = precision cmdArguments,
+       clusterCountFcm = clusterCount cmdArguments,
+       metricFcm = metric cmdArguments,
+       initialMatrixFcm = initialMatrix cmdArguments
+}
