@@ -40,7 +40,7 @@ findCenters supplyMatrix matrix = V.map calculateCenter transposedInitialMatrix
         transposedInitialMatrix = transposeMatrix supplyMatrix   
         calculateCenter col = let 
                 vectorSum = V.sum col 
-                vectors = V.zipWith (\a b -> V.map(\belem -> belem + (a**2)) b) col matrix 
+                vectors = V.zipWith (\a b -> V.map(\belem -> belem * (a**2)) b) col matrix 
                 partCalcValue = V.foldr1 (V.zipWith (+)) vectors 
             in V.map (/vectorSum) partCalcValue
 
@@ -54,8 +54,9 @@ generateNewSupplyMatrix matrix centers metric =
 generateNewSupplyElement :: V.Vector Double -> V.Vector Double -> V.Vector(V.Vector Double) -> T.MetricFuntion -> Double
 generateNewSupplyElement xi vk centers metricFunction =
     let 
-        getDistanceXiVk = metricFunction xi vk
-        getDistanceXiVj vj = metricFunction xi vj
+        offset    = 0.000000000000001
+        getDistanceXiVk = (metricFunction xi vk) + offset
+        getDistanceXiVj vj = (metricFunction xi vj) + offset
         power = 2.0 / (2 - 1) -- m = 2
         valForSum vj = ((getDistanceXiVk / (getDistanceXiVj vj)) ** power)
         sumResult = V.foldr (\elem prevSum -> prevSum + (valForSum elem)) 0.0 centers
