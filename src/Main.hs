@@ -7,37 +7,37 @@ import FCM
 import CsvParser
 import CmdArgumentsParser
 import Types
-
+import Control.Exception
 
 main = do
     seed <- newStdGen 
-
-
-   -- let initialMatrix = generateInitialSupplyMatrix 5 5 seed
-   -- print initialMatrix
-    --case initialMatrix of Left errorMessage -> error errorMessage
-    --                      Right matrix -> do
-    --                            print $ matrix
 
 
     let cmdArguments = info (helper <*> parseCmdArguments) fullDesc
     parsedCmdArguments <- execParser cmdArguments
 
     --read file content
-    inputFileContent <- readFile $ inputFile parsedCmdArguments
-    csvResult <- parseCSV inputFileContent parsedCmdArguments
-
-    case csvResult of Left errorMessage -> error errorMessage
-                      Right matrix -> do
-                        print $ parsedCmdArguments
-                        print $ matrix
-                        --print $ getRandomCenters matrix (clusterCount parsedCmdArguments) seed
-                        print $ generateInitialSupplyMatrix (V.length matrix) (clusterCount parsedCmdArguments) seed
-                        print $ runFCM (convertToFcmArguments parsedCmdArguments) matrix seed
+    inputFileContent <- try $ readFile $ inputFile parsedCmdArguments :: IO(Either SomeException String)
+    case inputFileContent of
+        Left exception -> putStrLn $ "Fault: " ++ show exception
+        Right inputFileContentValue -> do
+            csvResult <- parseCSV inputFileContentValue parsedCmdArguments
+            case csvResult of 
+                Left exception -> putStrLn $ "Fault: " ++ show exception
+                Right matrix -> do
+                    let clasterizationResult = runFCM (convertToFcmArguments parsedCmdArguments) matrix seed
+                    if outputFile parsedCmdArguments == ""
+                        then do
+                            putStrLn " "
+                            mapM_ (putStrLn . show) (clasterizationResult)
+                        else do
+                            putStrLn "Complete!!!"
+                            let writeMatrixToFile = V.mapM_ (\ x -> appendFile (outputFile parsedCmdArguments) ((show x) ++ "\n")) clasterizationResult
+                            writingResult <- try $  writeMatrixToFile :: IO(Either SomeException ())
+                            case writingResult of
+                                Left someException -> putStrLn $ show $ someException
+                                Right nothing -> return nothing
+                    
                         --print $ findCenters matrix
                         --print $ getRandomCenters matrix 5 seed
-
-
-
-    --print $ generateNormMatrix 7 7 seed
 

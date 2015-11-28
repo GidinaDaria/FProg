@@ -33,30 +33,27 @@ clusterize metricFunction precision matrix supplyMatrix =
        then newSupplyMatrix
        else clusterize metricFunction precision matrix newSupplyMatrix
 
-
 findCenters :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) 
-findCenters supplyMatrix matrix = V.map calculateCenter transposedInitialMatrix 
-    where 
-        transposedInitialMatrix = transposeMatrix supplyMatrix   
-        calculateCenter col = let 
-                vectorSum = V.sum col 
-                vectors = V.zipWith (\a b -> V.map(\belem -> belem * (a**2)) b) col matrix 
-                partCalcValue = V.foldr1 (V.zipWith (+)) vectors 
-            in V.map (/vectorSum) partCalcValue
+findCenters supplyMatrix matrix = 
+    let 
+       pow = V.map (**2)
+       transposedSupplyMatrix = transposeMatrix supplyMatrix
+       transposedMatrix = transposeMatrix matrix
+    in V.map (\ul -> V.map (\ jElem -> V.sum(V.zipWith(*) (pow ul) jElem)/ (V.sum (pow ul))) transposedMatrix) transposedSupplyMatrix
 
+--MY
 generateNewSupplyMatrix :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> T.MetricFuntion -> V.Vector(V.Vector Double)
 generateNewSupplyMatrix matrix centers metric = 
     let
-        objectsFunctionMap xi vk = generateNewSupplyElement xi vk centers metric
+        objectsFunctionMap xi vk = if xi == vk then 1.0 else (generateNewSupplyElement xi vk centers metric)
     in
         V.map (\xi -> V.map (\vk -> objectsFunctionMap xi vk) centers) matrix
 
 generateNewSupplyElement :: V.Vector Double -> V.Vector Double -> V.Vector(V.Vector Double) -> T.MetricFuntion -> Double
 generateNewSupplyElement xi vk centers metricFunction =
     let 
-        offset    = 0.000000000000001
-        getDistanceXiVk = (metricFunction xi vk) + offset
-        getDistanceXiVj vj = (metricFunction xi vj) + offset
+        getDistanceXiVk = (metricFunction xi vk)
+        getDistanceXiVj vj = (metricFunction xi vj)
         power = 2.0 / (2 - 1) -- m = 2
         valForSum vj = ((getDistanceXiVk / (getDistanceXiVj vj)) ** power)
         sumResult = V.foldr (\elem prevSum -> prevSum + (valForSum elem)) 0.0 centers
@@ -81,7 +78,8 @@ getRandomCenters matrix clustersCount seed =
     in  (V.ifilter (\i a -> i `elem` randonCenterIndexes) matrix)
 
 generateRandomList :: Int -> StdGen -> V.Vector Double
-generateRandomList size seed = V.take size (V.unfoldr (Just . random) seed)
+-- generateRandomList size seed = V.take size (V.unfoldr (Just . random) seed)
+generateRandomList size seed = V.take size (V.fromList (randoms seed :: [Double]))
 
 getHammingDistance :: V.Vector Double -> V.Vector Double -> Double
 getHammingDistance a b = V.sum $ V.map abs (V.zipWith (-) a b)
@@ -109,4 +107,4 @@ toListMatrix :: V.Vector (V.Vector Double) -> [[Double]]
 toListMatrix matrix =  map V.toList (V.toList matrix)
 
 toVectorMatrix :: [[Double]] -> V.Vector (V.Vector Double) 
-toVectorMatrix matrix = V.map (V.fromList) (V.fromList  matrix)
+toVectorMatrix matrix = V.map V.fromList (V.fromList  matrix)

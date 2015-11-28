@@ -20,9 +20,9 @@ parseCSV fileContent cmdArguments = do
 
 
 includeHeaderOption :: CmdArguments -> C.HasHeader
-includeHeaderOption cmdArguments = if  ignoreFirstLane cmdArguments 
-                                                  then C.NoHeader
-                                                  else C.HasHeader
+includeHeaderOption cmdArguments = if  skipFirstLane cmdArguments 
+                                                  then C.HasHeader
+                                                  else C.NoHeader
 
 toDoubleMatrix :: V.Vector (V.Vector String) -> V.Vector (V.Vector Double)
 toDoubleMatrix stringMatrix = V.map (V.map read) stringMatrix
@@ -31,9 +31,9 @@ getDecodeOptions :: CmdArguments -> C.DecodeOptions
 getDecodeOptions cmdArguments = DecodeOptions { decDelimiter = fromIntegral $ ord $ delimiter cmdArguments }
 
 transformColumns :: V.Vector (V.Vector Double) -> CmdArguments -> V.Vector (V.Vector Double)
-transformColumns matrix cmdArguments = if ignoreFirstColumn cmdArguments 
+transformColumns matrix cmdArguments = if skipFirstColumn cmdArguments 
                                         then  deleteFirstColumn matrix
-                                        else if ignoreLastColumn cmdArguments 
+                                        else if skipLastColumn cmdArguments 
                                             then deleteLastColumn matrix
                                             else matrix
 

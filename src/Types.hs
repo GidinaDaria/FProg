@@ -10,9 +10,9 @@ data CmdArguments =  CmdArguments {
                                    inputFile :: String,
                                    outputFile :: String,
                                    delimiter :: Char,
-                                   ignoreFirstColumn :: Bool,
-                                   ignoreLastColumn :: Bool,
-                                   ignoreFirstLane :: Bool,
+                                   skipFirstColumn :: Bool,
+                                   skipLastColumn :: Bool,
+                                   skipFirstLane :: Bool,
                                    precision :: Double,
                                    clusterCount :: Int,
                                    metric :: Types.Metric,
@@ -24,7 +24,7 @@ data FcmArguments =  FcmArguments { delimiterFcm :: Char,
                                    clusterCountFcm :: Int,
                                    metricFcm :: Types.Metric,
                                    initialMatrixFcm :: Types.InitialMatrix
-                                   } deriving(Show, Read)
+                                   } deriving(Read)
 
 
 type  MetricFuntion =  V.Vector Double -> V.Vector Double -> Double
