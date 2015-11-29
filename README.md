@@ -44,7 +44,7 @@ $ cabal install optparse-applicative
 $ cabal configure
 $ cabal build
 ```
-#### Usage example
+#### How to use
 ```bash
 $ dist\build\Lab1\Lab1.exe ./files/butterfly.txt -c 2
 ```
@@ -66,5 +66,10 @@ $ dist\build\Lab1\Lab1.exe ./files/butterfly.txt -c 2
 [7.057196779079775e-2,0.9294280322092023]
 [0.18587827398618895,0.814121726013811]
 [0.15962891090737888,0.8403710890926213]
+```
+
+#### Test usage
+```bash
+$ dist\build\Lab1\Test.exe
 ```
 
