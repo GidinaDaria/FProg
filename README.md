@@ -2,9 +2,12 @@
 
 ФПрог, №1
 
-Author: Кирвель Евгений, группа 151005
+## Author
+```bash
+Кирвель Евгений, группа 151005
+```
 
-# Параметры
+## Параметры
 ```bash
 main String [-o|--output String] 
 	  [-d|--delimiter CHAR]
@@ -27,7 +30,7 @@ main String [-o|--output String]
   -c,--clusterNumber                Clusters count (default 2)
   -p,--precision                    Precision(default 0.001)
   -m,--distanceMetric          	    Metric dunction "Hamming" or "Euclide", (default "Euclide")
-  -i,--initializationMethod NAME    Initial matrix "RandomMatrix" or "RandomCenter"(default RandomMatrix)
+  -i,--initializationMethod	    Initial matrix "RandomMatrix" or "RandomCenter"(default RandomMatrix)
 
 ```
 
@@ -65,4 +68,3 @@ $ dist\build\Lab1\Lab1.exe ./files/butterfly.txt -c 2
 [0.15962891090737888,0.8403710890926213]
 ```
 
-butterfly.txt -o file.txt -d ',' -f False -l True -z False -p 0.04 -c 20 -m Euclide -i RandomMatrix
