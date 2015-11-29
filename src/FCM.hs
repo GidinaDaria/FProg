@@ -10,7 +10,6 @@ import Data.List.Split as S
 runFCM :: FcmArguments -> V.Vector (V.Vector Double) -> StdGen -> V.Vector (V.Vector Double)
 runFCM arguments matrix seed = 
     let 
-        delimiter = delimiterFcm arguments
         precision = precisionFcm arguments
         metric = metricFcm arguments
         initialMatrix = initialMatrixFcm arguments
@@ -41,7 +40,6 @@ findCenters supplyMatrix matrix =
        transposedMatrix = transposeMatrix matrix
     in V.map (\ul -> V.map (\ jElem -> V.sum(V.zipWith(*) (pow ul) jElem)/ (V.sum (pow ul))) transposedMatrix) transposedSupplyMatrix
 
---MY
 generateNewSupplyMatrix :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> T.MetricFuntion -> V.Vector(V.Vector Double)
 generateNewSupplyMatrix matrix centers metric = 
     let
@@ -63,10 +61,9 @@ checkMatrix :: V.Vector(V.Vector Double) -> V.Vector(V.Vector Double) -> Double
 checkMatrix supplyMatrix newSupplyMatrix = V.maximum  $ V.zipWith (\a b -> V.maximum $ V.zipWith (\l v -> abs $ l - v) a b) supplyMatrix newSupplyMatrix
 
 --SupplyMatrix
-
 generateInitialSupplyMatrix :: Int -> Int -> StdGen -> V.Vector(V.Vector Double)
 generateInitialSupplyMatrix objectsCount clustersCount seed = 
-    let rows  = V.replicate objectsCount
+    let
         randomList = generateRandomList (clustersCount * objectsCount) seed
         getMatrix = toVectorMatrix $ S.chunksOf clustersCount (V.toList randomList)
     in V.map (normalizeMatrixRow) (getMatrix)
@@ -81,14 +78,12 @@ generateRandomList :: Int -> StdGen -> V.Vector Double
 -- generateRandomList size seed = V.take size (V.unfoldr (Just . random) seed)
 generateRandomList size seed = V.take size (V.fromList (randoms seed :: [Double]))
 
-getHammingDistance :: V.Vector Double -> V.Vector Double -> Double
-getHammingDistance a b = V.sum $ V.map abs (V.zipWith (-) a b)
+hammingDistance :: V.Vector Double -> V.Vector Double -> Double
+hammingDistance a b = V.sum $ V.map abs (V.zipWith (-) a b)
 
-
---Metrix
-
-getEuclideDistance :: V.Vector Double -> V.Vector Double -> Double
-getEuclideDistance a b = sqrt $ V.sum $ V.map (** 2) (V.zipWith (-) a b)
+--Metric
+euclideDistance :: V.Vector Double -> V.Vector Double -> Double
+euclideDistance a b = sqrt $ V.sum $ V.map (** 2) (V.zipWith (-) a b)
 
 normalizeMatrixRow :: V.Vector Double -> V.Vector Double
 normalizeMatrixRow a = V.map (/sumrow) a
@@ -96,8 +91,8 @@ normalizeMatrixRow a = V.map (/sumrow) a
 
 getMetricFuntion:: T.Metric -> T.MetricFuntion
 getMetricFuntion m = if m == T.Hamming
-                                  then getHammingDistance
-                                  else getEuclideDistance
+                                  then hammingDistance
+                                  else euclideDistance
 
 --Matrix Transformations
 transposeMatrix :: V.Vector (V.Vector Double) -> V.Vector (V.Vector Double)

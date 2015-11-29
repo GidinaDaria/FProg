@@ -13,6 +13,8 @@ main = do
     seed <- newStdGen 
 
 
+    print $ hammingDistance (V.fromList [1.0,1.0,1.0,1.0]) (V.fromList [0.0,1.0,0.0,0.0])
+
     let cmdArguments = info (helper <*> parseCmdArguments) fullDesc
     parsedCmdArguments <- execParser cmdArguments
 
@@ -36,8 +38,5 @@ main = do
                             writingResult <- try $  writeMatrixToFile :: IO(Either SomeException ())
                             case writingResult of
                                 Left someException -> putStrLn $ show $ someException
-                                Right nothing -> return nothing
-                    
-                        --print $ findCenters matrix
-                        --print $ getRandomCenters matrix 5 seed
+                                Right a -> putStrLn ""
 

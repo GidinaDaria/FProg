@@ -26,7 +26,7 @@ parseCmdArguments = CmdArguments
     )
     <*> option auto 
     (
-        long "ignoreFirstColumn" 
+        long "skipFirstColumn" 
         <> short 'f' 
         <> metavar "BOOL" 
         <> help "Ignore first column of CSV (default False)"
@@ -34,7 +34,7 @@ parseCmdArguments = CmdArguments
     )
     <*> option auto 
     (
-        long "ignoreLastColumn" 
+        long "skipLastColumn" 
         <> short 'l' 
         <> metavar "BOOL" 
         <> help "Ignore last column of CSV (default True)" 
@@ -43,7 +43,7 @@ parseCmdArguments = CmdArguments
     --used z because i don't know why i get error when use 'h'
     <*> option auto 
     (
-        long "ignoreFirstLane" 
+        long "skipFirstLane" 
         <> short 'z' <> metavar "BOOL" 
         <> help "Ignore first (header) lane of CSV (default False)" 
         <> value False
